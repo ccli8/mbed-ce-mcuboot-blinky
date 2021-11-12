@@ -12,10 +12,119 @@
     },
     "target_overrides": {
         "*": {
+            "platform.stdio-baud-rate": 115200,
             "mcuboot.bootloader-build": 0,
             "target.c_lib": "small",
-            "mcuboot.log-level": "MCUBOOT_LOG_LEVEL_DEBUG",
-            "mbed-trace.enable": true
+            "target.macros_add": ["MCUBOOT_HAVE_LOGGING"],
+            "mcuboot.log-level": "MCUBOOT_LOG_LEVEL_INFO",
+            "mbed-trace.enable": true,
+            "mbed-trace.max-level": "TRACE_LEVEL_INFO",
+            "mbed-trace.fea-ipv6": false
+        },
+        "NUMAKER_IOT_M467": {
+            "demo-button"                               : "BUTTON1",
+            "demo-button-active-low"                    : true
+        },
+        "NUMAKER_IOT_M467_FLASHIAP": {
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0x70000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0x73000",
+            "mcuboot.scratch-address"                   : "0xFE000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0x73",
+            "mcuboot.read-granularity"                  : 4,
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0xF6000",
+            "storage_tdb_internal.internal_size"        : "0x8000"
+        },
+        "NUMAKER_IOT_M467_FLASHIAP_TEST": {
+            "target.mbed_app_size"                      : "0x49000",
+            "mcuboot.slot-size"                         : "0x4C000"
+        },
+        "NUMAKER_IOT_M467_SPIF": {
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0xE3000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0xE6000",
+            "mcuboot.scratch-address"                   : "0xFE000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0xE6",
+            "mcuboot.read-granularity"                  : 4,
+            "target.components_add"                     : ["SPIF"],
+            "spif-driver.SPI_MOSI"                      : "PJ_1",
+            "spif-driver.SPI_MISO"                      : "PJ_0",
+            "spif-driver.SPI_CLK"                       : "PI_15",
+            "spif-driver.SPI_CS"                        : "PI_14",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0xF6000",
+            "storage_tdb_internal.internal_size"        : "0x8000"
+        },
+        "NUMAKER_IOT_M467_SPIF_TEST": {
+            "target.mbed_app_size"                      : "0x70000",
+            "mcuboot.slot-size"                         : "0x73000"
+        },
+        "NUMAKER_IOT_M467_NUSD": {
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0xE3000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0xE6000",
+            "mcuboot.scratch-address"                   : "0xFE000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0xE6",
+            "mcuboot.read-granularity"                  : 4,
+            "target.components_add"                     : ["NUSD"],
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0xF6000",
+            "storage_tdb_internal.internal_size"        : "0x8000"
+        },
+        "NUMAKER_IOT_M467_NUSD_TEST": {
+            "target.mbed_app_size"                      : "0x70000",
+            "mcuboot.slot-size"                         : "0x73000"
+        },
+        "NUMAKER_IOT_M487": {
+            "demo-button"                               : "BUTTON1",
+            "demo-button-active-low"                    : true
+        },
+        "NUMAKER_IOT_M487_SPIF": {
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0x63000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0x66000",
+            "mcuboot.scratch-address"                   : "0x7E000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0x66",
+            "mcuboot.read-granularity"                  : 4,
+            "target.components_add"                     : ["SPIF"],
+            "spif-driver.SPI_MOSI"                      : "PC_0",
+            "spif-driver.SPI_MISO"                      : "PC_1",
+            "spif-driver.SPI_CLK"                       : "PC_2",
+            "spif-driver.SPI_CS"                        : "PC_3",
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0x76000",
+            "storage_tdb_internal.internal_size"        : "0x8000"
+        },
+        "NUMAKER_IOT_M487_SPIF_TEST": {
+            "target.mbed_app_size"                      : "0x30000",
+            "mcuboot.slot-size"                         : "0x33000"
+        },
+        "NUMAKER_IOT_M487_NUSD": {
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0x63000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0x66000",
+            "mcuboot.scratch-address"                   : "0x7E000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0x66",
+            "mcuboot.read-granularity"                  : 4,
+            "target.components_add"                     : ["NUSD"],
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0x76000",
+            "storage_tdb_internal.internal_size"        : "0x8000"
+        },
+        "NUMAKER_IOT_M487_NUSD_TEST": {
+            "target.mbed_app_size"                      : "0x30000",
+            "mcuboot.slot-size"                         : "0x33000"
         },
         "NRF52840_DK": {
             "demo-button": "BUTTON1",

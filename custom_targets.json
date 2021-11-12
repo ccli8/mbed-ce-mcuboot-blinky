@@ -1,0 +1,32 @@
+{
+    "NUMAKER_IOT_M467_FLASHIAP": {
+        "inherits": ["NUMAKER_IOT_M467"]
+    },
+    "NUMAKER_IOT_M467_FLASHIAP_TEST": {
+        "inherits": ["NUMAKER_IOT_M467_FLASHIAP"]
+    },
+    "NUMAKER_IOT_M467_SPIF": {
+        "inherits": ["NUMAKER_IOT_M467"]
+    },
+    "NUMAKER_IOT_M467_SPIF_TEST": {
+        "inherits": ["NUMAKER_IOT_M467_SPIF"]
+    },
+    "NUMAKER_IOT_M467_NUSD": {
+        "inherits": ["NUMAKER_IOT_M467"]
+    },
+    "NUMAKER_IOT_M467_NUSD_TEST": {
+        "inherits": ["NUMAKER_IOT_M467_NUSD"]
+    },
+    "NUMAKER_IOT_M487_SPIF": {
+        "inherits": ["NUMAKER_IOT_M487"]
+    },
+    "NUMAKER_IOT_M487_SPIF_TEST": {
+        "inherits": ["NUMAKER_IOT_M487_SPIF"]
+    },
+    "NUMAKER_IOT_M487_NUSD": {
+        "inherits": ["NUMAKER_IOT_M487"]
+    },
+    "NUMAKER_IOT_M487_NUSD_TEST": {
+        "inherits": ["NUMAKER_IOT_M487_NUSD"]
+    }
+}

@@ -9,16 +9,78 @@
 #include "bootutil/bootutil.h"
 #include "bootutil/image.h"
 #include "FlashIAP/FlashIAPBlockDevice.h"
+#include "blockdevice/SlicingBlockDevice.h"
 #include "drivers/InterruptIn.h"
+
+#if COMPONENT_SPIF
+#include "SPIFBlockDevice.h"
+#endif
+
+#if COMPONENT_NUSD
+#include "NuSDFlashSimBlockDevice.h"
+#endif
 
 #define TRACE_GROUP "main"
 #include "mbed-trace/mbed_trace.h"
 
 mbed::BlockDevice* get_secondary_bd(void) {
+#if TARGET_NUVOTON
+#   if TARGET_NUMAKER_IOT_M467_FLASHIAP || \
+       TARGET_NUMAKER_IOT_M467_FLASHIAP_TEST
+    static FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
+    return &fbd;
+#   elif TARGET_NUMAKER_IOT_M467_SPIF || \
+         TARGET_NUMAKER_IOT_M467_SPIF_TEST
+    /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
+    static mbed::DigitalOut onboard_spi_wp(PI_13, 1);
+    static mbed::DigitalOut onboard_spi_hold(PI_12, 1);
+    static SPIFBlockDevice spif_bd(MBED_CONF_SPIF_DRIVER_SPI_MOSI,
+                                   MBED_CONF_SPIF_DRIVER_SPI_MISO,
+                                   MBED_CONF_SPIF_DRIVER_SPI_CLK,
+                                   MBED_CONF_SPIF_DRIVER_SPI_CS);
+    static mbed::SlicingBlockDevice sliced_bd(&spif_bd, 0x0, MCUBOOT_SLOT_SIZE);
+    return &sliced_bd;
+#   elif TARGET_NUMAKER_IOT_M487_SPIF || \
+         TARGET_NUMAKER_IOT_M487_SPIF_TEST
+    /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
+    static mbed::DigitalOut onboard_spi_wp(PC_5, 1);
+    static mbed::DigitalOut onboard_spi_hold(PC_4, 1);
+    static SPIFBlockDevice spif_bd(MBED_CONF_SPIF_DRIVER_SPI_MOSI,
+                                   MBED_CONF_SPIF_DRIVER_SPI_MISO,
+                                   MBED_CONF_SPIF_DRIVER_SPI_CLK,
+                                   MBED_CONF_SPIF_DRIVER_SPI_CS);
+    static mbed::SlicingBlockDevice sliced_bd(&spif_bd, 0x0, MCUBOOT_SLOT_SIZE);
+    return &sliced_bd;
+#   elif TARGET_NUMAKER_IOT_M467_NUSD || \
+         TARGET_NUMAKER_IOT_M467_NUSD_TEST || \
+         TARGET_NUMAKER_IOT_M487_NUSD || \
+         TARGET_NUMAKER_IOT_M487_NUSD_TEST
+    /* For NUSD, use the flash-simulate variant to fit MCUboot flash map backend. */
+    static NuSDFlashSimBlockDevice nusd_flashsim;
+    static mbed::SlicingBlockDevice sliced_bd(&nusd_flashsim, 0x0, MCUBOOT_SLOT_SIZE);
+    return &sliced_bd;
+#   else
+#   error("Target not support: Block device for secondary slot")
+#   endif
+#else
     mbed::BlockDevice* default_bd = mbed::BlockDevice::get_default_instance();
     static mbed::SlicingBlockDevice sliced_bd(default_bd, 0x0, MCUBOOT_SLOT_SIZE);
     return &sliced_bd;
+#endif
 }
+
+/* For Nuvoton targets, wake up from sleep through GPIO interrupt
+ *
+ * For Nuvoton targets, GPIO interrupt must enable to wake up from sleep.
+ * Due to active low, 'fall' rather than 'rise' is chosen to escape from
+ * sleep-loop smoothly.
+ */
+#if TARGET_NUVOTON
+void press_handler()
+{
+    /* N/A */
+}
+#endif
 
 int main()
 {
@@ -41,6 +103,22 @@ int main()
     }
 
     InterruptIn btn(DEMO_BUTTON);
+
+#if TARGET_NUVOTON
+     btn.fall(&press_handler);
+#endif
+
+    // Get the current version from the mcuboot header information
+    const struct image_header *header = (const struct image_header *) MCUBOOT_PRIMARY_SLOT_START_ADDR;
+    if (header->ih_magic == IMAGE_MAGIC) {
+        tr_info("Hello version %d.%d.%d+%lu",
+                header->ih_ver.iv_major,
+                header->ih_ver.iv_minor,
+                header->ih_ver.iv_revision,
+                header->ih_ver.iv_build_num);
+    } else {
+        tr_error("Invalid MCUboot header magic");
+    }
 
     // Erase secondary slot
     // On the first boot, the secondary BlockDevice needs to be clean
@@ -85,7 +163,22 @@ int main()
     // Copy the update image from internal flash to secondary BlockDevice
     // This is a "hack" that requires you to preload the update image into `mcuboot.primary-slot-address` + 0x40000
 
+#if TARGET_NUVOTON
+#   if TARGET_NUMAKER_IOT_M467_FLASHIAP_TEST
+    // Update image preload region: Immediately following primary/secondary slots
+    FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE * 2, MCUBOOT_SLOT_SIZE);
+#   elif TARGET_NUMAKER_IOT_M467_SPIF_TEST || \
+         TARGET_NUMAKER_IOT_M467_NUSD_TEST || \
+         TARGET_NUMAKER_IOT_M487_SPIF_TEST || \
+         TARGET_NUMAKER_IOT_M487_NUSD_TEST
+    // Update image preload region: Immediately following primary slot
+    FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
+#   else
+#   error("Target not support: Prepare for update candidate")
+#   endif
+#else
     FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + 0x40000, 0x20000);
+#endif
     ret = fbd.init();
     if (ret == 0) {
         tr_info("FlashIAPBlockDevice inited");
