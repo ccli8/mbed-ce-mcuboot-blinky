@@ -1,5 +1,20 @@
 {
     "config": {
+        "has-ota-download-simulate-slot": {
+            "help": "Has reserved area to support firmware upgrade in-place",
+            "macro_name": "HAS_OTA_DL_SIM_SLOT",
+            "required": false
+        },
+        "has-image-trailer": {
+            "help": "MCUboot image has trailer added through imgtool --pad parameter in signing",
+            "macro_name": "HAS_IMAGE_TRAILER",
+            "required": false
+        },
+        "has-image-confirmed": {
+            "help": "MCUboot image has confirmed through imgtool --confirm parameter in signing",
+            "macro_name": "HAS_IMAGE_CONFIRMED",
+            "required": false
+        },
         "demo-button": {
             "macro_name": "DEMO_BUTTON",
             "required": true
@@ -39,8 +54,28 @@
             "storage_tdb_internal.internal_size"        : "0x8000"
         },
         "NUMAKER_IOT_M467_FLASHIAP_TEST": {
+            "has-ota-download-simulate-slot"            : true,
             "target.mbed_app_size"                      : "0x49000",
             "mcuboot.slot-size"                         : "0x4C000"
+        },
+        "NUMAKER_IOT_M467_FLASHIAP_DUALBANK": {
+            "has-image-confirmed"                       : true,
+            "target.mbed_app_start"                     : "0x11000",
+            "target.mbed_app_size"                      : "0x6D000",
+            "mcuboot.primary-slot-address"              : "0x10000",
+            "mcuboot.slot-size"                         : "0x70000",
+            "mcuboot.scratch-address"                   : "0xFE000",
+            "mcuboot.scratch-size"                      : "0x2000",
+            "mcuboot.max-img-sectors"                   : "0x70",
+            "mcuboot.read-granularity"                  : 4,
+            "storage.storage_type"                      : "TDB_INTERNAL",
+            "storage_tdb_internal.internal_base_address": "0xF0000",
+            "storage_tdb_internal.internal_size"        : "0xE000"
+        },
+        "NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST": {
+            "has-ota-download-simulate-slot"            : true,
+            "target.mbed_app_size"                      : "0x35000",
+            "mcuboot.slot-size"                         : "0x38000"
         },
         "NUMAKER_IOT_M467_SPIF": {
             "target.mbed_app_start"                     : "0x11000",
@@ -61,6 +96,7 @@
             "storage_tdb_internal.internal_size"        : "0x8000"
         },
         "NUMAKER_IOT_M467_SPIF_TEST": {
+            "has-ota-download-simulate-slot"            : true,
             "target.mbed_app_size"                      : "0x70000",
             "mcuboot.slot-size"                         : "0x73000"
         },
@@ -79,6 +115,7 @@
             "storage_tdb_internal.internal_size"        : "0x8000"
         },
         "NUMAKER_IOT_M467_NUSD_TEST": {
+            "has-ota-download-simulate-slot"            : true,
             "target.mbed_app_size"                      : "0x70000",
             "mcuboot.slot-size"                         : "0x73000"
         },
@@ -105,6 +142,7 @@
             "storage_tdb_internal.internal_size"        : "0x8000"
         },
         "NUMAKER_IOT_M487_SPIF_TEST": {
+            "has-ota-download-simulate-slot"            : true,
             "target.mbed_app_size"                      : "0x30000",
             "mcuboot.slot-size"                         : "0x33000"
         },
@@ -123,6 +161,7 @@
             "storage_tdb_internal.internal_size"        : "0x8000"
         },
         "NUMAKER_IOT_M487_NUSD_TEST": {
+            "has-ota-download-simulate-slot"            : true,
             "target.mbed_app_size"                      : "0x30000",
             "mcuboot.slot-size"                         : "0x33000"
         },

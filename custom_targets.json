@@ -5,6 +5,12 @@
     "NUMAKER_IOT_M467_FLASHIAP_TEST": {
         "inherits": ["NUMAKER_IOT_M467_FLASHIAP"]
     },
+    "NUMAKER_IOT_M467_FLASHIAP_DUALBANK": {
+        "inherits": ["NUMAKER_IOT_M467"]
+    },
+    "NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST": {
+        "inherits": ["NUMAKER_IOT_M467_FLASHIAP_DUALBANK"]
+    },
     "NUMAKER_IOT_M467_SPIF": {
         "inherits": ["NUMAKER_IOT_M467"]
     },

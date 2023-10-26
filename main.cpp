@@ -29,6 +29,10 @@ mbed::BlockDevice* get_secondary_bd(void) {
        TARGET_NUMAKER_IOT_M467_FLASHIAP_TEST
     static FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
     return &fbd;
+#   elif TARGET_NUMAKER_IOT_M467_FLASHIAP_DUALBANK || \
+       TARGET_NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST
+    static FlashIAPBlockDevice fbd(0x80000, MCUBOOT_SLOT_SIZE);
+    return &fbd;
 #   elif TARGET_NUMAKER_IOT_M467_SPIF || \
          TARGET_NUMAKER_IOT_M467_SPIF_TEST
     /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
@@ -88,6 +92,7 @@ int main()
     mbed_trace_init();
     mbed_trace_include_filters_set("main,MCUb,BL");
 
+#if !HAS_IMAGE_CONFIRMED
     /**
      *  Do whatever is needed to verify the firmware is okay
      *  (eg: self test, connect to server, etc)
@@ -101,6 +106,11 @@ int main()
     } else {
         tr_error("Failed to confirm boot: %d", ret);
     }
+#else
+    // Image should have been marked as OK through imgtool --confirm parameter in signing,
+    // or boot_set_pending(true) in previous boot. Otherwise, it will roll back in next boot.
+    int ret = 0;
+#endif
 
     InterruptIn btn(DEMO_BUTTON);
 
@@ -160,6 +170,7 @@ int main()
         sleep();
     }
 
+#if HAS_OTA_DL_SIM_SLOT
     // Copy the update image from internal flash to secondary BlockDevice
     // This is a "hack" that requires you to preload the update image into `mcuboot.primary-slot-address` + 0x40000
 
@@ -167,6 +178,9 @@ int main()
 #   if TARGET_NUMAKER_IOT_M467_FLASHIAP_TEST
     // Update image preload region: Immediately following primary/secondary slots
     FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE * 2, MCUBOOT_SLOT_SIZE);
+#   elif TARGET_NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST
+    // Update image preload region: Immediately following secondary slot
+    FlashIAPBlockDevice fbd(0x80000 + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
 #   elif TARGET_NUMAKER_IOT_M467_SPIF_TEST || \
          TARGET_NUMAKER_IOT_M467_NUSD_TEST || \
          TARGET_NUMAKER_IOT_M487_SPIF_TEST || \
@@ -187,7 +201,11 @@ int main()
     }
 
     static uint8_t buffer[0x1000];
+#if TARGET_NUVOTON
+    for (size_t offset = 0; offset < MCUBOOT_SLOT_SIZE; offset+= sizeof(buffer)) {
+#else
     for (size_t offset = 0; offset < 0x20000; offset+= sizeof(buffer)) {
+#endif
         ret = fbd.read(buffer, offset, sizeof(buffer));
         if (ret != 0) {
             tr_error("Failed to read FlashIAPBlockDevice at offset %u", offset);
@@ -197,7 +215,14 @@ int main()
             tr_error("Failed to program secondary BlockDevice at offset %u", offset);
         }
     }
+#else
+    // FIXME: Copy update image to secondary slot in custom way
+    tr_info("Copy update image to secondary slot in custom way...");
+    ThisThread::sleep_for(2000ms);
+    tr_info("Copy update image to secondary slot in custom way...DONE");
+#endif
 
+#if !HAS_IMAGE_TRAILER && !HAS_IMAGE_CONFIRMED
     // Activate the image in the secondary BlockDevice
 
     tr_info("> Image copied to secondary BlockDevice, press button to activate");
@@ -216,4 +241,8 @@ int main()
     } else {
         tr_error("Failed to set secondary image pending: %d", ret);
     }
+#else
+    // Image should have had trailer/confirmed through imgtool --pad/--confirm parameter in signing.
+    tr_info("> Image copied to secondary BlockDevice, reboot to update");
+#endif
 }
