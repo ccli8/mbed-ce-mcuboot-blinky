@@ -17,6 +17,12 @@
     "NUMAKER_IOT_M467_SPIF_TEST": {
         "inherits": ["NUMAKER_IOT_M467_SPIF"]
     },
+    "NUMAKER_IOT_M467_SPIF_BOOT80K": {
+        "inherits": ["NUMAKER_IOT_M467"]
+    },
+    "NUMAKER_IOT_M467_SPIF_BOOT80K_TEST": {
+        "inherits": ["NUMAKER_IOT_M467_SPIF_BOOT80K"]
+    },
     "NUMAKER_IOT_M467_NUSD": {
         "inherits": ["NUMAKER_IOT_M467"]
     },

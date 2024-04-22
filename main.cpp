@@ -34,7 +34,9 @@ mbed::BlockDevice* get_secondary_bd(void) {
     static FlashIAPBlockDevice fbd(0x80000, MCUBOOT_SLOT_SIZE);
     return &fbd;
 #   elif TARGET_NUMAKER_IOT_M467_SPIF || \
-         TARGET_NUMAKER_IOT_M467_SPIF_TEST
+         TARGET_NUMAKER_IOT_M467_SPIF_TEST || \
+         TARGET_NUMAKER_IOT_M467_SPIF_BOOT80K || \
+         TARGET_NUMAKER_IOT_M467_SPIF_BOOT80K_TEST
     /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
     static mbed::DigitalOut onboard_spi_wp(PI_13, 1);
     static mbed::DigitalOut onboard_spi_hold(PI_12, 1);
@@ -182,6 +184,7 @@ int main()
     // Update image preload region: Immediately following secondary slot
     FlashIAPBlockDevice fbd(0x80000 + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
 #   elif TARGET_NUMAKER_IOT_M467_SPIF_TEST || \
+         TARGET_NUMAKER_IOT_M467_SPIF_BOOT80K_TEST || \
          TARGET_NUMAKER_IOT_M467_NUSD_TEST || \
          TARGET_NUMAKER_IOT_M487_SPIF_TEST || \
          TARGET_NUMAKER_IOT_M487_NUSD_TEST
