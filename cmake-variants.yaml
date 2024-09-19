@@ -1,0 +1,88 @@
+buildType:
+  default: Develop
+  choices:
+    Develop:
+      short: Develop
+      long: Emit debug information but also optimize
+      buildType: Develop
+    Debug:
+      short: Debug
+      long: Emit debug information and don't optimize
+      buildType: Debug
+    Release:
+      short: Release
+      long: Optimize generated code
+      buildType: Release
+board:
+  default: NUMAKER_IOT_M467_FLASHIAP_TEST
+  choices:
+    NUMAKER_IOT_M467_FLASHIAP:
+      short: NUMAKER_IOT_M467_FLASHIAP
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_FLASHIAP
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_FLASHIAP_TEST:
+      short: NUMAKER_IOT_M467_FLASHIAP_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_FLASHIAP_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_FLASHIAP_DUALBANK:
+      short: NUMAKER_IOT_M467_FLASHIAP_DUALBANK
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_FLASHIAP_DUALBANK
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST:
+      short: NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_SPIF:
+      short: NUMAKER_IOT_M467_SPIF
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_SPIF
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_SPIF_TEST:
+      short: NUMAKER_IOT_M467_SPIF_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_SPIF_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_SPIF_BOOT80K:
+      short: NUMAKER_IOT_M467_SPIF_BOOT80K
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_SPIF_BOOT80K
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_SPIF_BOOT80K_TEST:
+      short: NUMAKER_IOT_M467_SPIF_BOOT80K_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_SPIF_BOOT80K_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_NUSD:
+      short: NUMAKER_IOT_M467_NUSD
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_NUSD
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M467_NUSD_TEST:
+      short: NUMAKER_IOT_M467_NUSD_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M467_NUSD_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M487_SPIF:
+      short: NUMAKER_IOT_M487_SPIF
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M487_SPIF
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M487_SPIF_TEST:
+      short: NUMAKER_IOT_M487_SPIF_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M487_SPIF_TEST
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M487_NUSD:
+      short: NUMAKER_IOT_M487_NUSD
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M487_NUSD
+        UPLOAD_METHOD: OPENOCD
+    NUMAKER_IOT_M487_NUSD_TEST:
+      short: NUMAKER_IOT_M487_NUSD_TEST
+      settings:
+        MBED_TARGET: NUMAKER_IOT_M487_NUSD_TEST
+        UPLOAD_METHOD: OPENOCD
