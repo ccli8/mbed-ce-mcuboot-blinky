@@ -1,0 +1,9 @@
+[submodule "mbed-os"]
+	path = mbed-os
+	url = https://github.com/mbed-ce/mbed-os
+[submodule "mcuboot"]
+	path = mcuboot
+	url = https://github.com/mcu-tools/mcuboot
+[submodule "drivers/COMPONENT_NUSD"]
+	path = drivers/COMPONENT_NUSD
+	url = https://github.com/mbed-nuvoton/NuMaker-mbed-ce-SD-driver
