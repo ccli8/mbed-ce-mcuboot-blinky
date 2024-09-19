@@ -41,8 +41,12 @@
             "demo-button-active-low"                    : true
         },
         "NUMAKER_IOT_M467_FLASHIAP": {
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0x70000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0x70000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0x73000",
             "mcuboot.scratch-address"                   : "0xFD000",
@@ -55,13 +59,17 @@
         },
         "NUMAKER_IOT_M467_FLASHIAP_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x49000",
+            "target_mbed_app_size"                      : "0x49000",
             "mcuboot.slot-size"                         : "0x4C000"
         },
         "NUMAKER_IOT_M467_FLASHIAP_DUALBANK": {
             "has-image-confirmed"                       : true,
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0x6D000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0x6D000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0x70000",
             "mcuboot.scratch-address"                   : "0xFD000",
@@ -74,12 +82,16 @@
         },
         "NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x35000",
+            "target_mbed_app_size"                      : "0x35000",
             "mcuboot.slot-size"                         : "0x38000"
         },
         "NUMAKER_IOT_M467_SPIF": {
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0xE3000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0xE3000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0xE6000",
             "mcuboot.scratch-address"                   : "0xFD000",
@@ -97,12 +109,16 @@
         },
         "NUMAKER_IOT_M467_SPIF_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x70000",
+            "target_mbed_app_size"                      : "0x70000",
             "mcuboot.slot-size"                         : "0x73000"
         },
         "NUMAKER_IOT_M467_SPIF_BOOT80K": {
-            "target.mbed_app_start"                     : "0x15000",
-            "target.mbed_app_size"                      : "0xDF000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x15000,
+                    "size": 0xDF000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x14000",
             "mcuboot.slot-size"                         : "0xE2000",
             "mcuboot.scratch-address"                   : "0xFD000",
@@ -120,12 +136,16 @@
         },
         "NUMAKER_IOT_M467_SPIF_BOOT80K_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x6D000",
+            "target_mbed_app_size"                      : "0x6D000",
             "mcuboot.slot-size"                         : "0x70000"
         },
         "NUMAKER_IOT_M467_NUSD": {
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0xE3000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0xE3000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0xE6000",
             "mcuboot.scratch-address"                   : "0xFD000",
@@ -139,7 +159,7 @@
         },
         "NUMAKER_IOT_M467_NUSD_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x70000",
+            "target_mbed_app_size"                      : "0x70000",
             "mcuboot.slot-size"                         : "0x73000"
         },
         "NUMAKER_IOT_M487": {
@@ -147,8 +167,12 @@
             "demo-button-active-low"                    : true
         },
         "NUMAKER_IOT_M487_SPIF": {
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0x63000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0x63000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0x66000",
             "mcuboot.scratch-address"                   : "0x7D000",
@@ -166,12 +190,16 @@
         },
         "NUMAKER_IOT_M487_SPIF_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x30000",
+            "target_mbed_app_size"                      : "0x30000",
             "mcuboot.slot-size"                         : "0x33000"
         },
         "NUMAKER_IOT_M487_NUSD": {
-            "target.mbed_app_start"                     : "0x11000",
-            "target.mbed_app_size"                      : "0x63000",
+            "target.memory_bank_config": {
+                "IROM1": {
+                    "start": 0x11000,
+                    "size": 0x63000
+                }
+            },
             "mcuboot.primary-slot-address"              : "0x10000",
             "mcuboot.slot-size"                         : "0x66000",
             "mcuboot.scratch-address"                   : "0x7D000",
@@ -185,47 +213,8 @@
         },
         "NUMAKER_IOT_M487_NUSD_TEST": {
             "has-ota-download-simulate-slot"            : true,
-            "target.mbed_app_size"                      : "0x30000",
+            "target_mbed_app_size"                      : "0x30000",
             "mcuboot.slot-size"                         : "0x33000"
-        },
-        "NRF52840_DK": {
-            "demo-button": "BUTTON1",
-            "demo-button-active-low": true,
-            "target.mbed_app_start": "0x21000",
-            "target.mbed_app_size": "0xBE000",
-            "mcuboot.primary-slot-address": "0x20000",
-            "mcuboot.slot-size": "0xC0000",
-            "mcuboot.scratch-address": "0xE0000",
-            "mcuboot.scratch-size": "0x20000",
-            "mcuboot.max-img-sectors": "0x180",
-            "mcuboot.read-granularity": 4,
-            "qspif.QSPI_MIN_PROG_SIZE": 4
-        },
-        "EP_AGORA": {
-            "demo-button": "BUTTON1",
-            "demo-button-active-low": true,
-            "target.mbed_app_start": "0x21000",
-            "target.mbed_app_size": "0xBE000",
-            "mcuboot.primary-slot-address": "0x20000",
-            "mcuboot.slot-size": "0xC0000",
-            "mcuboot.scratch-address": "0xE0000",
-            "mcuboot.scratch-size": "0x20000",
-            "mcuboot.max-img-sectors": "0x180",
-            "mcuboot.read-granularity": 4,
-            "qspif.QSPI_MIN_PROG_SIZE": 4
-        },
-        "DISCO_L475VG_IOT01A": {
-            "demo-button": "USER_BUTTON",
-            "demo-button-active-low": true,
-            "target.mbed_app_start": "0x8021000",
-            "target.mbed_app_size": "0xBE000",
-            "mcuboot.primary-slot-address": "0x8020000",
-            "mcuboot.slot-size": "0xC0000",
-            "mcuboot.scratch-address": "0x80E0000",
-            "mcuboot.scratch-size": "0x20000",
-            "mcuboot.max-img-sectors": "0x180",
-            "mcuboot.read-granularity": 4,
-            "qspif.QSPI_MIN_PROG_SIZE": 4
         }
     }
 }

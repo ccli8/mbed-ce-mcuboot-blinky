@@ -8,72 +8,13 @@
 
 #include "bootutil/bootutil.h"
 #include "bootutil/image.h"
+#include "flash_map_backend/secondary_bd.h"
 #include "FlashIAP/FlashIAPBlockDevice.h"
 #include "blockdevice/SlicingBlockDevice.h"
 #include "drivers/InterruptIn.h"
 
-#if COMPONENT_SPIF
-#include "SPIFBlockDevice.h"
-#endif
-
-#if COMPONENT_NUSD
-#include "NuSDFlashSimBlockDevice.h"
-#endif
-
 #define TRACE_GROUP "main"
 #include "mbed-trace/mbed_trace.h"
-
-mbed::BlockDevice* get_secondary_bd(void) {
-#if TARGET_NUVOTON
-#   if TARGET_NUMAKER_IOT_M467_FLASHIAP || \
-       TARGET_NUMAKER_IOT_M467_FLASHIAP_TEST
-    static FlashIAPBlockDevice fbd(MCUBOOT_PRIMARY_SLOT_START_ADDR + MCUBOOT_SLOT_SIZE, MCUBOOT_SLOT_SIZE);
-    return &fbd;
-#   elif TARGET_NUMAKER_IOT_M467_FLASHIAP_DUALBANK || \
-       TARGET_NUMAKER_IOT_M467_FLASHIAP_DUALBANK_TEST
-    static FlashIAPBlockDevice fbd(0x80000, MCUBOOT_SLOT_SIZE);
-    return &fbd;
-#   elif TARGET_NUMAKER_IOT_M467_SPIF || \
-         TARGET_NUMAKER_IOT_M467_SPIF_TEST || \
-         TARGET_NUMAKER_IOT_M467_SPIF_BOOT80K || \
-         TARGET_NUMAKER_IOT_M467_SPIF_BOOT80K_TEST
-    /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
-    static mbed::DigitalOut onboard_spi_wp(PI_13, 1);
-    static mbed::DigitalOut onboard_spi_hold(PI_12, 1);
-    static SPIFBlockDevice spif_bd(MBED_CONF_SPIF_DRIVER_SPI_MOSI,
-                                   MBED_CONF_SPIF_DRIVER_SPI_MISO,
-                                   MBED_CONF_SPIF_DRIVER_SPI_CLK,
-                                   MBED_CONF_SPIF_DRIVER_SPI_CS);
-    static mbed::SlicingBlockDevice sliced_bd(&spif_bd, 0x0, MCUBOOT_SLOT_SIZE);
-    return &sliced_bd;
-#   elif TARGET_NUMAKER_IOT_M487_SPIF || \
-         TARGET_NUMAKER_IOT_M487_SPIF_TEST
-    /* Whether or not QE bit is set, explicitly disable WP/HOLD functions for safe. */
-    static mbed::DigitalOut onboard_spi_wp(PC_5, 1);
-    static mbed::DigitalOut onboard_spi_hold(PC_4, 1);
-    static SPIFBlockDevice spif_bd(MBED_CONF_SPIF_DRIVER_SPI_MOSI,
-                                   MBED_CONF_SPIF_DRIVER_SPI_MISO,
-                                   MBED_CONF_SPIF_DRIVER_SPI_CLK,
-                                   MBED_CONF_SPIF_DRIVER_SPI_CS);
-    static mbed::SlicingBlockDevice sliced_bd(&spif_bd, 0x0, MCUBOOT_SLOT_SIZE);
-    return &sliced_bd;
-#   elif TARGET_NUMAKER_IOT_M467_NUSD || \
-         TARGET_NUMAKER_IOT_M467_NUSD_TEST || \
-         TARGET_NUMAKER_IOT_M487_NUSD || \
-         TARGET_NUMAKER_IOT_M487_NUSD_TEST
-    /* For NUSD, use the flash-simulate variant to fit MCUboot flash map backend. */
-    static NuSDFlashSimBlockDevice nusd_flashsim;
-    static mbed::SlicingBlockDevice sliced_bd(&nusd_flashsim, 0x0, MCUBOOT_SLOT_SIZE);
-    return &sliced_bd;
-#   else
-#   error("Target not support: Block device for secondary slot")
-#   endif
-#else
-    mbed::BlockDevice* default_bd = mbed::BlockDevice::get_default_instance();
-    static mbed::SlicingBlockDevice sliced_bd(default_bd, 0x0, MCUBOOT_SLOT_SIZE);
-    return &sliced_bd;
-#endif
-}
 
 /* For Nuvoton targets, wake up from sleep through GPIO interrupt
  *
@@ -143,7 +84,7 @@ int main()
 #else
     while (!btn) {
 #endif
-        sleep();
+        mbed_sleep();
     }
 
     BlockDevice *secondary_bd = get_secondary_bd();
@@ -169,7 +110,7 @@ int main()
 #else
     while (!btn) {
 #endif
-        sleep();
+        mbed_sleep();
     }
 
 #if HAS_OTA_DL_SIM_SLOT
@@ -235,7 +176,7 @@ int main()
 #else
     while (!btn) {
 #endif
-        sleep();
+        mbed_sleep();
     }
 
     ret = boot_set_pending(false);

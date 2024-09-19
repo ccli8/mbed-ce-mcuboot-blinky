@@ -1,8 +1,10 @@
-# Mbed OS/mcuboot Blinky example
+# Mbed CE/MCUboot Blinky example
 
-This example project shows how to configure an Mbed-OS application to be booted by an mcuboot bootloader.
+This example project shows how to configure an
+[Mbed OS Community Edition](https://github.com/mbed-ce/mbed-os)
+application to be booted by an mcuboot bootloader.
 
-All information for this example has been moved to the combined README in the bootloader repository, [`mbed-mcuboot-demo`](https://github.com/AGlass0fMilk/mbed-mcuboot-demo).
+All information for this example has been moved to the combined README in the bootloader repository, [mbed-ce-mcuboot-demo](https://github.com/mbed-nuvoton/mbed-ce-mcuboot-demo).
 
 ### License and contributions
 
