@@ -78,37 +78,55 @@ function(mbed_generate_upload_target target)
     gen_upload_target(${target} ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_BASE_NAME:${target}>_merged.hex)
 endfunction()
 
+# Change flash image name for upload target, where <app>_merged.hex is the
+# combined image in post-build process
+#
+# "load" -> "load <app>_merged.hex"
+function(mbed_generate_upload_target target)
+    # add upload target
+    #
+    # Ignore OUTPUT_EXT and fix to Intel Hex format
+    gen_upload_target(${target} ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_BASE_NAME:${target}>_merged.hex)
+
+    # Make sure building the upload target causes the target to be built first
+    if(TARGET flash-${target})
+        add_dependencies(flash-${target} ${target})
+    endif()
+
+endfunction()
+
 # Change flash image name for GDB debug, where <app>_merged.hex is the
 # combined image in post-build process
 #
 # "load" -> "load <app>_merged.hex"
-function(mbed_adjust_upload_debug_commands target)
-    # MBED_UPLOAD_LAUNCH_COMMANDS defined?
-    if(NOT DEFINED MBED_UPLOAD_LAUNCH_COMMANDS)
-        return()
-    endif()
+function(mbed_get_upload_launch_commands_for target result_var)
+
+    set(${result_var} ${MBED_UPLOAD_LAUNCH_COMMANDS})
+
+    # <app>_merged.hex for debug launch load
+    set(HEX_FILE ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_BASE_NAME:${target}>_merged.hex)
 
     # GDB load command in MBED_UPLOAD_LAUNCH_COMMANDS?
     list(FIND MBED_UPLOAD_LAUNCH_COMMANDS "load" LOAD_INDEX)
-    if(${LOAD_INDEX} LESS "0")
-        return()
+    if(${LOAD_INDEX} GREATER_EQUAL 0)
+        # "load" -> "load <app>.hex"
+        #
+        # GDB load command doesn't support binary format. Ignore OUTPUT_EXT
+        # and fix to Intel Hex format.
+        #
+        # NOTE: The <app>.hex file name needs to be quoted (\") to pass along
+        #       to gdb correctly.
+        list(TRANSFORM ${result_var} APPEND " \"${HEX_FILE}\"" AT ${LOAD_INDEX})
     endif()
 
-    # <app>_merged.hex for debug launch load
-    set(MERGED_HEX_FILE ${CMAKE_CURRENT_BINARY_DIR}/$<TARGET_FILE_BASE_NAME:${target}>_merged.hex)
+    # 'monitor program' command in MBED_UPLOAD_LAUNCH_COMMANDS?
+    list(FIND MBED_UPLOAD_LAUNCH_COMMANDS "monitor program" MON_PROG_INDEX)
+    if(${MON_PROG_INDEX} GREATER_EQUAL 0)
+        list(TRANSFORM ${result_var} APPEND " \"${HEX_FILE}\"" AT ${MON_PROG_INDEX})
+    endif()
 
-    # "load" -> "load <app>_merged.hex"
-    #
-    # GDB load command doesn't support binary format. Ignore OUTPUT_EXT
-    # and fix to Intel Hex format.
-    #
-    # NOTE: The <app>_merged.hex file name needs to be quoted (\\\") to pass along
-    #       to gdb correctly.
-    list(TRANSFORM MBED_UPLOAD_LAUNCH_COMMANDS APPEND " \\\"${MERGED_HEX_FILE}\\\"" AT ${LOAD_INDEX})
-
-    # Update MBED_UPLOAD_LAUNCH_COMMANDS in cache
-    set(MBED_UPLOAD_LAUNCH_COMMANDS ${MBED_UPLOAD_LAUNCH_COMMANDS} CACHE INTERNAL "" FORCE)
-endfunction()
+    set(${result_var} ${${result_var}} PARENT_SCOPE)
+endfunction(mbed_get_upload_launch_commands_for)
 
 # Must call this for each target to set up bin file creation, code upload, etc
 mbed_set_post_build(${APP_TARGET})

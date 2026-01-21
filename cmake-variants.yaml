@@ -86,3 +86,17 @@ board:
       settings:
         MBED_TARGET: NUMAKER_IOT_M487_NUSD_TEST
         UPLOAD_METHOD: OPENOCD
+mcubootSigningKeys:
+  default: Test
+  choices:
+    Test:
+      short: Test
+      settings:
+        MCUBOOT_SIGNING_KEY: signing-keys.pem
+shallowSubmodules:
+  default: Disabled
+  choices:
+    Disabled:
+      short: Disabled
+      settings:
+        MBED_USE_SHALLOW_SUBMODULES: FALSE
